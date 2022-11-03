@@ -28,7 +28,7 @@ public class LicenseController {
     @PostMapping
     public ResponseEntity<String> createLicense(@PathVariable("organizationId") String organizationId, @RequestBody License request,
                                                 @RequestHeader(value = "Accept-Language",required = false) Locale locale) {
-        return ResponseEntity.ok(licenseService.createLicense(request, organizationId /*, locale*/));
+        return ResponseEntity.ok(licenseService.createLicense(request, organizationId, locale));
     }
 
     @DeleteMapping(value="/{licenseId}")
