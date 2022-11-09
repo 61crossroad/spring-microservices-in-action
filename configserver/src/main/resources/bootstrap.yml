@@ -12,6 +12,7 @@ spring:
           search-locations: classpath:/config
         git:
           uri: https://github.com/61crossroad/spring-microservices-in-action
-          search-paths: config/licensingservice
+          search-paths: config
+          default-label: master
 server:
   port: 8071
