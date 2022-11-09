@@ -10,19 +10,21 @@ services:
       backend:
         aliases:
           - "configserver"
-  # eurekaserver:
-    # image: ostock/eurekaserver:0.0.1-SNAPSHOT
-    # ports:
-      # - "8070:8070"
-    # depends_on:
+  eurekaserver:
+    image: ostock/eurekaserver:latest
+    ports:
+      - "8070:8070"
+    depends_on:
+      - configserver
       # database:
         # condition: service_healthy
       # configserver:
-        # condition: service_started  
-    # networks:
-      # backend:
-        # aliases:
-          # - "eurekaserver"
+        # condition: service_started
+    command: ["./wait-for-it.sh", "configserver:8071", "-t", "10"]
+    networks:
+      backend:
+        aliases:
+          - "eurekaserver"
   licensingservice:
     image: ostock/licensing-service:latest
     ports:
@@ -31,6 +33,7 @@ services:
       - "SPRING_PROFILES_ACTIVE=dev"
     depends_on:
       - configserver
+    command: ["./wait-for-it.sh", "configserver:8071", "-t", "10"]
     networks:
       backend:
         aliases:
