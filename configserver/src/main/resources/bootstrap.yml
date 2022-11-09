@@ -2,12 +2,16 @@ spring:
   application:
     name: config-server
   profiles:
-    active: native
+    active:
+      - native, git
 
   cloud:
     config:
       server:
         native:
           search-locations: classpath:/config
+        git:
+          uri: https://github.com/61crossroad/spring-microservices-in-action
+          search-paths: config/licensingservice
 server:
   port: 8071
