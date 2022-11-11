@@ -20,7 +20,7 @@ public class OrganizationController {
     }
 
     @RequestMapping(value="/{organizationId}",method = RequestMethod.PUT)
-    public void updateOrganization(@PathVariable("organizationId") String id, @RequestBody Organization organization) {
+    public void updateOrganization(@PathVariable("organizationId") String organizationId, @RequestBody Organization organization) {
         service.update(organization);
     }
 
@@ -31,7 +31,7 @@ public class OrganizationController {
 
     @RequestMapping(value="/{organizationId}",method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteOrganization(@PathVariable("id") String id,  @RequestBody Organization organization) {
+    public void deleteOrganization(@PathVariable("organizationId") String organizationId,  @RequestBody Organization organization) {
         service.delete(organization);
     }
 
