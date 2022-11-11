@@ -15,6 +15,12 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class LicenseController {
     private final LicenseService licenseService;
 
+    @GetMapping("/{licenseId}/{clientType}")
+    public License getLicensesWithClient(@PathVariable("organizationId") String organizationId,
+                                         @PathVariable("licenseId") String licenseId,
+                                         @PathVariable("clientType") String clientType) {
+        return licenseService.getLicense(licenseId, organizationId, clientType);
+    }
     @GetMapping("/{licenseId}")
     public ResponseEntity<License> getLicense(@PathVariable("organizationId") String organizationId, @PathVariable("licenseId") String licenseId) {
         License license = licenseService.getLicense(licenseId, organizationId);
