@@ -8,6 +8,12 @@ LABEL maintainer="61crossroad <61crossroad@gmail.com>"
 # The application's jar file
 ARG JAR_FILE
 
+#COPY mvnw mvnw
+#COPY mvnw.cmd mvnw.cmd
+#COPY pom.xml pom.xml
+#COPY src /src
+#RUN ./mvnw package
+
 # Add the application's jar to the container
 COPY ${JAR_FILE} app.jar
 
@@ -16,9 +22,10 @@ COPY ${JAR_FILE} app.jar
 
 # execute the application
 ENTRYPOINT ["java", "-jar", "/app.jar"]
+
 # stage 2
 # Same Java runtime
-# FROM openjdk:11-slim
+#FROM openjdk:11-slim
 
 # Add volume pointing to /tmp
 #VOLUME /tmp

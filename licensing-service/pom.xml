@@ -99,16 +99,16 @@
 
 	<build>
 		<plugins>
-			<!-- <plugin>
+			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>${parent.version}</version>
+				<version>${project.parent.version}</version>
 				<configuration>
 					<image>
 						<name>${docker.image.prefix}/${project.artifactId}:latest</name>
 					</image>
 				</configuration>
-			</plugin> -->
+			</plugin>
 
 			<plugin>
 				<groupId>io.fabric8</groupId>
