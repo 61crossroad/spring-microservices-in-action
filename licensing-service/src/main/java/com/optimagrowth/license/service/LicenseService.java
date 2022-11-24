@@ -7,12 +7,18 @@ import com.optimagrowth.license.repository.LicenseRepository;
 import com.optimagrowth.license.service.client.OrganizationDiscoveryClient;
 import com.optimagrowth.license.service.client.OrganizationFeignClient;
 import com.optimagrowth.license.service.client.OrganizationRestTemplateClient;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
+import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeoutException;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class LicenseService {
@@ -51,7 +57,7 @@ public class LicenseService {
     }
 
     private Organization retrieveOrganizationInfo(String organizationId, String clientType) {
-        Organization organization = null;
+        Organization organization;
 
         switch (clientType) {
             case "feign":
@@ -92,5 +98,29 @@ public class LicenseService {
         licenseRepository.delete(license);
         responseMessage = String.format(messages.getMessage("license.delete.message", null, null), licenseId);
         return responseMessage;
+    }
+
+    @CircuitBreaker(name = "licenseService")
+    public List<License> getLicensesByOrganization(String organizationId) throws TimeoutException {
+        randomlyRunLong();
+        return licenseRepository.findByOrganizationId(organizationId);
+    }
+
+    private void randomlyRunLong() throws TimeoutException {
+        SecureRandom rand = new SecureRandom();
+        int randomNum = rand.nextInt(3) + 1;
+        log.info("## randomNum: {}", randomNum);
+        if (randomNum != 3) {
+            sleep();
+        }
+    }
+
+    private void sleep() throws TimeoutException {
+        try {
+            Thread.sleep(5000);
+            throw new TimeoutException();
+        } catch (InterruptedException e) {
+            log.error(e.getMessage());
+        }
     }
 }

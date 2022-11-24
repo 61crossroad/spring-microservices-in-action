@@ -3,12 +3,17 @@ package com.optimagrowth.license.controller;
 import com.optimagrowth.license.model.License;
 import com.optimagrowth.license.service.LicenseService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/v1/organization/{organizationId}/license")
@@ -44,5 +49,10 @@ public class LicenseController {
     @DeleteMapping(value="/{licenseId}")
     public ResponseEntity<String> deleteLicense(@PathVariable("organizationId") String organizationId, @PathVariable("licenseId") String licenseId) {
         return ResponseEntity.ok(licenseService.deleteLicense(licenseId));
+    }
+
+    @GetMapping("/")
+    public List<License> getLicenses(@PathVariable String organizationId) throws TimeoutException {
+        return licenseService.getLicensesByOrganization(organizationId);
     }
 }
