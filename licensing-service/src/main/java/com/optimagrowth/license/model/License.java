@@ -1,12 +1,13 @@
 package com.optimagrowth.license.model;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.hateoas.RepresentationModel;
 
 import javax.persistence.*;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Getter @Setter @ToString
 @Entity
 @Table(name = "licenses")

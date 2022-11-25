@@ -14,6 +14,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeoutException;
@@ -100,10 +101,22 @@ public class LicenseService {
         return responseMessage;
     }
 
-    @CircuitBreaker(name = "licenseService")
+    @CircuitBreaker(name = "licenseService", fallbackMethod = "buildFallbackLicenseList")
     public List<License> getLicensesByOrganization(String organizationId) throws TimeoutException {
         randomlyRunLong();
         return licenseRepository.findByOrganizationId(organizationId);
+    }
+
+    private List<License> buildFallbackLicenseList(String organizationId, Throwable t) {
+        List<License> fallbackList = new ArrayList<>();
+        License license = License.builder()
+                .licenseId("0000000-00-00000")
+                .organizationId(organizationId)
+                .productName("Sorry~~~~~~~")
+                .build();
+
+        fallbackList.add(license);
+        return fallbackList;
     }
 
     private void randomlyRunLong() throws TimeoutException {
