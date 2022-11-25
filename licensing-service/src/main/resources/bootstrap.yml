@@ -44,3 +44,10 @@ resilience4j:
         coreThreadPoolSize: 1
         queueCapacity: 1
         keepAliveDuration: 20ms
+  retry:
+    instances:
+      retryLicenseService:
+        max-attempts: 5
+        wait-duration: 10000
+        retry-exceptions:
+          - java.util.concurrent.TimeoutException
