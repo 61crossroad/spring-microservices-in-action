@@ -132,33 +132,6 @@
 			</plugin>
 
 			<plugin>
-				<groupId>io.fabric8</groupId>
-				<artifactId>docker-maven-plugin</artifactId>
-				<version>0.40.2</version>
-				<configuration>
-					<images>
-						<image>
-							<name>${docker.image.prefix}/${project.artifactId}</name>
-						</image>
-					</images>
-					<buildArgs>
-						<JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>
-					</buildArgs>
-				</configuration>
-				<executions>
-					<execution>
-						<id>build</id>
-						<phase>pre-integration-test</phase>
-						<goals>
-							<goal>
-								build
-							</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
-			<!-- <plugin>
 				<groupId>com.spotify</groupId>
 				<artifactId>dockerfile-maven-plugin</artifactId>
 				<version>1.4.13</version>
@@ -179,7 +152,7 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin> -->
+			</plugin>
 		</plugins>
 	</build>
 

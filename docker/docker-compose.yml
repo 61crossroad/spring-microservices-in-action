@@ -1,43 +1,126 @@
-version: '3.7'
+version: '2.1'
 services:
   configserver:
-    image: ostock/configserver:latest
+    image: ostock/configserver:0.0.1-SNAPSHOT
     ports:
        - "8071:8071"
-    # environment:
-      # ENCRYPT_KEY: "fje83Ki8403Iod87dne7Yjsl3THueh48jfuO9j4U2hf64Lo"
+    environment:
+      ENCRYPT_KEY: "fje83Ki8403Iod87dne7Yjsl3THueh48jfuO9j4U2hf64Lo"
     networks:
       backend:
         aliases:
           - "configserver"
+    healthcheck:
+      test: "curl --fail --silent localhost:8071/actuator/health | grep UP || exit 1"
+      interval: 5s
+      timeout: 2s
+      retries: 5
   eurekaserver:
-    image: ostock/eurekaserver:latest
+    image: ostock/eurekaserver:0.0.1-SNAPSHOT
     ports:
       - "8070:8070"
     depends_on:
-      - configserver
-      # database:
-        # condition: service_healthy
-      # configserver:
-        # condition: service_started
-    command: ["./wait-for-it.sh", "configserver:8071", "-t", "10"]
+      configserver:
+        condition: service_healthy
     networks:
       backend:
         aliases:
           - "eurekaserver"
+  # gatewayserver:
+  #   image: ostock/gatewayserver:0.0.1-SNAPSHOT
+  #   ports:
+  #     - "8072:8072"
+  #   environment:
+  #     PROFILE: "default"
+  #     SERVER_PORT: "8072"
+  #     CONFIGSERVER_URI: "http://configserver:8071"
+  #     EUREKASERVER_URI: "http://eurekaserver:8070/eureka/"
+  #     EUREKASERVER_PORT: "8070"
+  #     CONFIGSERVER_PORT: "8071"
+  #   depends_on:
+  #     configserver:
+  #       condition: service_started
+  #     eurekaserver:
+  #       condition: service_started
+  #   networks:
+  #     backend:
+  #       aliases:
+  #         - "gateway"
   licensingservice:
-    image: ostock/licensing-service:latest
+    image: ostock/licensing-service:0.0.1-SNAPSHOT
+    environment:
+      PROFILE: "dev"
+      CONFIGSERVER_URI: "http://configserver:8071"
+      CONFIGSERVER_PORT:   "8071"
+      DATABASESERVER_PORT: "5432"
+      ENCRYPT_KEY:       "IMSYMMETRIC"
+    depends_on:
+      configserver:
+        condition: service_healthy
     ports:
       - "8080:8080"
-    environment:
-      - "SPRING_PROFILES_ACTIVE=dev"
-    depends_on:
-      - configserver
-    command: ["./wait-for-it.sh", "configserver:8071", "-t", "10"]
     networks:
-      backend:
-        aliases:
-          - "licenseservice"
+      - backend
+  organizationservice:
+    image: ostock/organization-service:0.0.1-SNAPSHOT
+    environment:
+      PROFILE: "dev"
+      CONFIGSERVER_URI: "http://configserver:8071"
+      CONFIGSERVER_PORT:   "8071"
+      DATABASESERVER_PORT: "5432"
+      ENCRYPT_KEY:       "IMSYMMETRIC"
+    depends_on:
+      configserver:
+        condition: service_healthy
+    ports:
+      - "8081:8081"
+    networks:
+      - backend
+
 networks:
   backend:
     driver: bridge
+
+# version: '3.7'
+# services:
+#   configserver:
+#     image: ostock/configserver:latest
+#     ports:
+#        - "8071:8071"
+#     # environment:
+#       # ENCRYPT_KEY: "fje83Ki8403Iod87dne7Yjsl3THueh48jfuO9j4U2hf64Lo"
+#     networks:
+#       backend:
+#         aliases:
+#           - "configserver"
+#   eurekaserver:
+#     image: ostock/eurekaserver:latest
+#     ports:
+#       - "8070:8070"
+#     depends_on:
+#       - configserver
+#       # database:
+#         # condition: service_healthy
+#       # configserver:
+#         # condition: service_started
+#     command: ["./wait-for-it.sh", "configserver:8071", "-t", "10"]
+#     networks:
+#       backend:
+#         aliases:
+#           - "eurekaserver"
+#   licensingservice:
+#     image: ostock/licensing-service:latest
+#     ports:
+#       - "8080:8080"
+#     environment:
+#       - "SPRING_PROFILES_ACTIVE=dev"
+#     depends_on:
+#       - configserver
+#     command: ["./wait-for-it.sh", "configserver:8071", "-t", "10"]
+#     networks:
+#       backend:
+#         aliases:
+#           - "licenseservice"
+# networks:
+#   backend:
+#     driver: bridge

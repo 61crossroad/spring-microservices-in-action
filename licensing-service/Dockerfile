@@ -1,6 +1,7 @@
 # stage 1
 # Start with a base image containing Java runtime
-FROM openjdk:11-slim as build
+# FROM openjdk:11-slim as build
+FROM openjdk:11 as build
 
 # Add Maintainer Info
 LABEL maintainer="61crossroad <61crossroad@gmail.com>"
@@ -12,7 +13,7 @@ ARG JAR_FILE
 COPY ${JAR_FILE} app.jar
 
 # unpackage jar file
-#RUN mkdir -p target/dependency && (cd target/dependency; jar -xf /app.jar)
+RUN mkdir -p target/dependency && (cd target/dependency; jar -xf /app.jar)
 
 # execute the application
 ENTRYPOINT ["java", "-jar", "/app.jar"]

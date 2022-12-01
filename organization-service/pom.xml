@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.optimagrowth</groupId>
-	<artifactId>licensing-service</artifactId>
+	<artifactId>organization-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>licensing-service</name>
-	<description>Ostock Licensing Service</description>
+	<name>organization-service</name>
+	<description>Ostock Organization Service</description>
 	<properties>
 		<java.version>11</java.version>
 		<spring-cloud.version>2021.0.4</spring-cloud.version>
@@ -108,8 +108,8 @@
 					</image>
 				</configuration>
 			</plugin>
-			<!-- This plugin is used to create a docker image and publish the image to docker hub-->
-			<!--<plugin>
+
+			<plugin>
 				<groupId>com.spotify</groupId>
 				<artifactId>dockerfile-maven-plugin</artifactId>
 				<version>1.4.13</version>
@@ -130,7 +130,7 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin> -->
+			</plugin>
 		</plugins>
 	</build>
 
