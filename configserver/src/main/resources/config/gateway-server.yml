@@ -26,3 +26,12 @@ spring:
 
           filters:
             - RewritePath=/organization/(?<path>.*), /$\{path}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    gateway:
+      enabled: true
