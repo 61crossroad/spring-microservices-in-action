@@ -2,6 +2,7 @@ package com.optimagrowth.license.controller;
 
 import com.optimagrowth.license.model.License;
 import com.optimagrowth.license.service.LicenseService;
+import com.optimagrowth.license.utils.UserContextHolder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -53,6 +54,8 @@ public class LicenseController {
 
     @GetMapping("/")
     public List<License> getLicenses(@PathVariable String organizationId) throws TimeoutException {
+        log.info("LicenseServiceController Correlation id: {}", UserContextHolder.getContext().getCorrelationId());
+
         return licenseService.getLicensesByOrganization(organizationId);
     }
 }
